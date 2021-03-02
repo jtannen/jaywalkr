@@ -71,11 +71,11 @@ correct_missing <- function(res, allow_unmatched_weights, weight_pts, geom){
 
     warning(paste(unmatched_txt, "Falling back to distance."))
 
-    rematched <- weight_pts[is.na(res$geom.id)] %>%
+    rematched <- weight_pts[missing] %>%
       sf::st_distance(geom) %>%
       apply(1, which.min)
 
-    res$geom.id[is.na(res$geom.id)] <- rematched
+    res$geom.id[missing] <- rematched
 
   } else if (allow_unmatched_weights == "error") {
 
@@ -84,7 +84,7 @@ correct_missing <- function(res, allow_unmatched_weights, weight_pts, geom){
   } else if(allow_unmatched_weights == "drop"){
 
     warning(paste(unmatched_txt, "Those will be dropped."))
-    res <- res[!is.na(res$geom.id), ]
+    res <- res[!missing, ]
 
   } else stop("Bad allow_unmatched_weights")
 
