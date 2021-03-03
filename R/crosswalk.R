@@ -181,4 +181,3 @@ crosswalk_geoms <- function(
   res <- crosswalk_from_weights(x_weights, y_weights)
   return(res)
 }
-
