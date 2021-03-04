@@ -147,6 +147,45 @@ crosswalk_from_weights <- function(
   return(res)
 }
 
+#' Crosswalk two `sf` geoms, using spatial weights.
+#'
+#' @param x_geom `sf` polygons to crosswalk from.
+#' @param y_geom `sf` polygons to crosswalk to.
+#' @param weight_pts `sf` points associated with weights.
+#' @param weights A vector of weights, same length as `weight_pts`.
+#' @param x_id A vector of ids associated with `x_geom`. If `NULL`, ids are `1:N`.
+#' @param y_id A vector of ids associated with `y_geom`. If `NULL`, ids are `1:N`.
+#' @param allow_unmatched_weights How to handle `weight_pts` that do not fall in any geom.
+#' @param verbose Print informative meessages.
+#'
+#' @return A dataframe with columns `x.id`, `y.id`, `weight`, `from_x_to_y`, `from_y_to_x`.
+#' If x_id or y_id are NULL, the id columns are integers refering to indices of the geoms.
+#' `weight` is the sum of weights in the intersection. `from_x_to_y` is the sum of weight in
+#' the intersection divided by the sum of weights in the `x_geom` as a whole. It should be
+#' used to proportionally allocate values from `x_geom` to `y_geom`s.
+#'
+#' `allow_unmatched_weights` handles unmatched weights. This is useful with Census data,
+#' where boundaries can extend into the water, so block centroids may not fall in a non-Census geom.
+#' If "error", then unmatched weights result in an error. If "drop", unmatched weights are dropped.
+#' If "distance", unmatched weights are assigned to the closest geom.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' data("divs_2019")
+#' data("divs_201911")
+#' data("phila_blocks")
+#' cw <- crosswalk_geoms_(
+#'   divs_2019$geometry,
+#'   divs_201911$geometry,
+#'   weight_pts=phila_blocks$geometry,
+#'   weights=phila_blocks$pop,
+#'   x_id=divs_2019$warddiv,
+#'   y_id=divs_201911$warddiv
+#' )
+#' }
+#' @export
+
 crosswalk_geoms <- function(
   x_geom,
   y_geom,
