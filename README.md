@@ -36,5 +36,13 @@ crosswalk_geoms(
   allow_unmatched_weights="distance",
   verbose=TRUE
 )
+
+crosswalk_geoms_area(
+  x_geom=divs_2019$geometry,
+  y_geom=divs_201911$geometry,
+  x_id=divs_2019$warddiv,
+  y_id=divs_201911$geometry$warddiv,
+  allow_unmatched_weights="allow"
+)
 ```
 
